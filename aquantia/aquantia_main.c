@@ -970,7 +970,6 @@ done:
 
 	return ret;
 }
-
 #endif
 
 #if IS_ENABLED(CONFIG_AQUANTIA_MACSEC)
@@ -994,10 +993,16 @@ static int aqr113_config_init(struct phy_device *phydev)
 
 	/* Check that the PHY interface type is compatible */
 	if (phydev->interface != PHY_INTERFACE_MODE_SGMII &&
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+	    phydev->interface != PHY_INTERFACE_MODE_1000BASEKX &&
+#endif
 	    phydev->interface != PHY_INTERFACE_MODE_2500BASEX &&
 	    phydev->interface != PHY_INTERFACE_MODE_XGMII &&
 	    phydev->interface != PHY_INTERFACE_MODE_USXGMII &&
-	    phydev->interface != PHY_INTERFACE_MODE_10GKR)
+	    phydev->interface != PHY_INTERFACE_MODE_10GKR &&
+	    phydev->interface != PHY_INTERFACE_MODE_10GBASER &&
+	    phydev->interface != PHY_INTERFACE_MODE_XAUI &&
+	    phydev->interface != PHY_INTERFACE_MODE_RXAUI)
 		return -ENODEV;
 
 	WARN(phydev->interface == PHY_INTERFACE_MODE_XGMII,
